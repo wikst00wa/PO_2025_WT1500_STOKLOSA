@@ -2,13 +2,15 @@ package agh.ics.oop;
 
 import agh.ics.oop.model.MoveDirection;
 
+import java.util.Arrays;
+
 import static agh.ics.oop.OptionsParser.parseOptions;
 
 public class World {
 
     public static void main(String[] args) {
         System.out.println("Start");
-        MoveDirection[] modified_args = parseOptions(args);
+        MoveDirection[] modified_args = Arrays.copyOfRange(parseOptions(args), 0, parseOptions(args).length);
         run(modified_args);
         System.out.println("Stop");
     }
