@@ -15,13 +15,19 @@ public class OptionsParser {
         int valid_arg_index = 0;
 
         for (String arg : args) {
-            switch (arg) {
-                case "f" -> res[valid_arg_index++] = MoveDirection.FORWARD;
-                case "b" -> res[valid_arg_index++] = MoveDirection.BACKWARD;
-                case "l" -> res[valid_arg_index++] = MoveDirection.LEFT;
-                case "r" -> res[valid_arg_index++] = MoveDirection.RIGHT;
+            MoveDirection dir = switch (arg) {
+                case "f" -> MoveDirection.FORWARD;
+                case "b" -> MoveDirection.BACKWARD;
+                case "l" -> MoveDirection.LEFT;
+                case "r" -> MoveDirection.RIGHT;
+                default -> null;
+            };
+
+            if (dir != null) {
+                res[valid_arg_index++] = dir;
             }
         }
+
         return res;
     }
 }
