@@ -1,9 +1,6 @@
 package agh.ics.oop;
 
-import agh.ics.oop.model.Animal;
-import agh.ics.oop.model.MapDirection;
-import agh.ics.oop.model.MoveDirection;
-import agh.ics.oop.model.Vector2d;
+import agh.ics.oop.model.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,11 +8,16 @@ import java.util.List;
 public class Simulation {
     private final List<Animal> simulatedAnimals;
     private final List<MoveDirection> simulatedDirections;
+    private final WorldMap simulatedMap;
 
-    public Simulation(List<Vector2d> positions, List<MoveDirection> directions) {
+    public Simulation(List<Vector2d> positions, List<MoveDirection> directions, WorldMap map) {
         this.simulatedAnimals = new ArrayList<Animal>();
+        this.simulatedMap = map;
+
         for (Vector2d pos : positions) {
-            this.simulatedAnimals.add(new Animal(pos));
+            Animal newAnimal = new Animal(pos);
+            this.simulatedAnimals.add(newAnimal);
+            this.simulatedMap.place(newAnimal);
         }
         this.simulatedDirections = new ArrayList<MoveDirection>(directions);
     }
@@ -26,8 +28,8 @@ public class Simulation {
 
         for (int i = 0; i < moves; i++) {
             int animal_id = i % population;
-            this.simulatedAnimals.get(animal_id).move(this.simulatedDirections.get(i));
-            System.out.println("Zwierze " + (animal_id + 1) + " : " + this.simulatedAnimals.get(animal_id).toString());
+            this.simulatedMap.move(this.simulatedAnimals.get(animal_id), this.simulatedDirections.get(i));
+            System.out.println(this.simulatedMap);
         }
     }
 
