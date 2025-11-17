@@ -1,9 +1,7 @@
 package agh.ics.oop;
 
 
-import agh.ics.oop.model.MapDirection;
-import agh.ics.oop.model.MoveDirection;
-import agh.ics.oop.model.Vector2d;
+import agh.ics.oop.model.*;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -32,7 +30,8 @@ public class SimulationTest {
                 MapDirection.EAST
         );
 
-        Simulation simulation = new Simulation(positions, directions);
+        RectangularMap map = new RectangularMap(5, 5);
+        Simulation simulation = new Simulation(positions, directions, map);
 
         //when
         simulation.run();
@@ -62,7 +61,8 @@ public class SimulationTest {
                 new Vector2d(0, 2)
         );
 
-        Simulation simulation = new Simulation(positions, directions);
+        RectangularMap map = new RectangularMap(5, 5);
+        Simulation simulation = new Simulation(positions, directions, map);
 
         //when
         simulation.run();
@@ -95,7 +95,8 @@ public class SimulationTest {
                 MapDirection.EAST
         );
 
-        Simulation simulation = new Simulation(positions, directions);
+        RectangularMap map = new RectangularMap(5, 5);
+        Simulation simulation = new Simulation(positions, directions, map);
 
         //when
         simulation.run();
@@ -129,7 +130,8 @@ public class SimulationTest {
                 MapDirection.EAST
         );
 
-        Simulation simulation = new Simulation(positions, directions);
+        RectangularMap map = new RectangularMap(5, 5);
+        Simulation simulation = new Simulation(positions, directions, map);
 
         //when
         simulation.run();
@@ -160,7 +162,8 @@ public class SimulationTest {
         );
 
         List<MoveDirection> directions = OptionsParser.parseOptions(input);
-        Simulation simulation = new Simulation(positions, directions);
+        RectangularMap map = new RectangularMap(5, 5);
+        Simulation simulation = new Simulation(positions, directions, map);
 
         //when
         simulation.run();
@@ -191,7 +194,8 @@ public class SimulationTest {
         );
 
         List<MoveDirection> directions = OptionsParser.parseOptions(input);
-        Simulation simulation = new Simulation(positions, directions);
+        RectangularMap map = new RectangularMap(5, 5);
+        Simulation simulation = new Simulation(positions, directions, map);
 
         //when
         simulation.run();
@@ -222,7 +226,8 @@ public class SimulationTest {
         );
 
         List<MoveDirection> directions = OptionsParser.parseOptions(input);
-        Simulation simulation = new Simulation(positions, directions);
+        RectangularMap map = new RectangularMap(5, 5);
+        Simulation simulation = new Simulation(positions, directions, map);
 
         //when
         simulation.run();
@@ -252,7 +257,8 @@ public class SimulationTest {
         );
 
         List<MoveDirection> directions = OptionsParser.parseOptions(input);
-        Simulation simulation = new Simulation(positions, directions);
+        RectangularMap map = new RectangularMap(5, 5);
+        Simulation simulation = new Simulation(positions, directions, map);
 
         //when
         simulation.run();
