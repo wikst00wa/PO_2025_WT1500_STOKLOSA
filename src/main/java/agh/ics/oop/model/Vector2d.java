@@ -12,16 +12,16 @@ public class Vector2d {
     }
 
     public int getX() {
-        return x;
+        return this.x;
     }
 
     public int getY() {
-        return y;
+        return this.y;
     }
 
     @Override
     public String toString() {
-        return ("(" + x + "," + y + ")");
+        return ("(" + this.x + "," + this.y + ")");
     }
 
     public boolean precedes(Vector2d other) {
@@ -41,41 +41,11 @@ public class Vector2d {
     }
 
     public Vector2d upperRight(Vector2d other) {
-        if (this.x > other.x) {
-            if (this.y > other.y) {
-                return new Vector2d(this.x, this.y);
-            }
-            else {
-                return new Vector2d(this.x, other.y);
-            }
-        }
-        else {
-            if (this.y > other.y) {
-                return new Vector2d(other.x, this.y);
-            }
-            else {
-                return new Vector2d(other.x, other.y);
-            }
-        }
+        return new Vector2d(Math.max(this.x, other.x), Math.max(this.y, other.y));
     }
 
     public Vector2d lowerLeft(Vector2d other) {
-        if (this.x < other.x) {
-            if (this.y < other.y) {
-                return new Vector2d(this.x, this.y);
-            }
-            else {
-                return new Vector2d(this.x, other.y);
-            }
-        }
-        else {
-            if (this.y < other.y) {
-                return new Vector2d(other.x, this.y);
-            }
-            else {
-                return new Vector2d(other.x, other.y);
-            }
-        }
+        return new Vector2d(Math.min(this.x, other.x), Math.min(this.y, other.y));
     }
 
     public Vector2d opposite() {

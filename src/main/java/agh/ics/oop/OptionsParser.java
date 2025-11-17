@@ -1,7 +1,13 @@
 package agh.ics.oop;
+
+
 import agh.ics.oop.model.MoveDirection;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class OptionsParser {
+    /* Stara metoda zwracająca tablicę MoveDirection[]
     public static MoveDirection[] parseOptions(String[] args) {
         int valid_args = 0;
 
@@ -30,4 +36,28 @@ public class OptionsParser {
 
         return res;
     }
+*/
+
+    public static List<MoveDirection> parseOptions(String[] args) {
+        List<MoveDirection> res = new ArrayList<MoveDirection>();
+
+        for (String arg : args) {
+            MoveDirection dir = switch (arg) {
+                case "f" -> MoveDirection.FORWARD;
+                case "b" -> MoveDirection.BACKWARD;
+                case "l" -> MoveDirection.LEFT;
+                case "r" -> MoveDirection.RIGHT;
+                default -> null;
+            };
+
+            if (dir != null) {
+                res.add(dir);
+            }
+        }
+
+        return res;
+
+    }
 }
+
+
