@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static agh.ics.oop.OptionsParser.parseOptions;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 class OptionsParserTest {
 
@@ -31,33 +31,29 @@ class OptionsParserTest {
     }
 
     @Test
-    public void optionsParserHandlesOnlyInvalidInputs() {
+    public void optionsParserRejectsOnlyInvalidInputs() {
         //given
         String[] input = {"x", "d", "p", "h", "w"};
-        List<MoveDirection> validator = new ArrayList<MoveDirection>();
 
-        //when
-        List<MoveDirection> test2 = parseOptions(input);
+        //when (nothing)
 
         //then
-        assertEquals(validator, test2);
+        assertThrows(IllegalArgumentException.class, () -> {
+            OptionsParser.parseOptions(input);
+        });
     }
 
     @Test
-    public void optionsParserWorksForMixedInputs() {
+    public void optionsParserRejectsMixedInputs() {
         //given
         String[] input = {"x", "f", "z", "l", "b", "g"};
-        List<MoveDirection> validator = new ArrayList<MoveDirection>(
-                List.of(MoveDirection.FORWARD,
-                        MoveDirection.LEFT,
-                        MoveDirection.BACKWARD)
-        );
 
-        //when
-        List<MoveDirection> test3 = parseOptions(input);
+        //when (nothing)
 
         //then
-        assertEquals(validator, test3);
+        assertThrows(IllegalArgumentException.class, () -> {
+            OptionsParser.parseOptions(input);
+        });
     }
 
     @Test

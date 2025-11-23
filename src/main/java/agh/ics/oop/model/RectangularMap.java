@@ -1,6 +1,8 @@
 package agh.ics.oop.model;
 
-import agh.ics.oop.model.util.MapVisualizer;
+import agh.ics.oop.model.util.Boundary;
+
+import java.util.Collection;
 
 public class RectangularMap extends AbstractWorldMap implements WorldMap {
 
@@ -17,12 +19,26 @@ public class RectangularMap extends AbstractWorldMap implements WorldMap {
         return (super.canMoveTo(position) && position.getX() >= 0 && position.getX() < this.width && position.getY() >= 0 && position.getY() < this.height);
     }
 
-
     @Override
-    public String toString() {
-        MapVisualizer mapVis = new MapVisualizer(this);
-        Vector2d lowerLeft = new Vector2d(0, 0);
-        Vector2d upperRight = new Vector2d(this.width - 1, this.height - 1);
-        return mapVis.draw(lowerLeft, upperRight);
+    public Boundary getCurrentBounds() {
+
+        Collection<WorldElement> mapElements = this.getElements();
+
+        if(mapElements == null || mapElements.isEmpty()) {
+            return new Boundary(new Vector2d(0,0), new Vector2d(0,0));
+        }
+
+        Vector2d lowerLeftCorner = new Vector2d(Integer.MAX_VALUE, Integer.MAX_VALUE);
+        Vector2d upperRightCorner = new Vector2d(Integer.MIN_VALUE, Integer.MIN_VALUE);
+
+        for (WorldElement element : mapElements) {
+            Vector2d position = element.getPosition();
+
+            lowerLeftCorner = lowerLeftCorner.lowerLeft(position);
+            upperRightCorner = upperRightCorner.upperRight(position);
+        }
+
+        return new Boundary(lowerLeftCorner, upperRightCorner);
     }
+
 }

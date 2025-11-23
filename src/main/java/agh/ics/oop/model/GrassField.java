@@ -1,6 +1,6 @@
 package agh.ics.oop.model;
 
-import agh.ics.oop.model.util.MapVisualizer;
+import agh.ics.oop.model.util.Boundary;
 
 import java.util.*;
 
@@ -36,56 +36,6 @@ public class GrassField extends AbstractWorldMap implements WorldMap {
     }
 
     @Override
-    public String toString() {
-        MapVisualizer mapVis = new MapVisualizer(this);
-
-        int minX = Integer.MAX_VALUE;
-        int maxX = Integer.MIN_VALUE;
-        int minY = Integer.MAX_VALUE;
-        int maxY = Integer.MIN_VALUE;
-
-        for (Vector2d pos : animals.keySet()) {
-            int x = pos.getX();
-            int y = pos.getY();
-
-            if (x < minX) {
-                minX = x;
-            }
-            if (x > maxX) {
-                maxX = x;
-            }
-            if (y < minY) {
-                minY = y;
-            }
-            if (y > maxY) {
-                maxY = y;
-            }
-        }
-
-        for (Vector2d pos : grasses.keySet()) {
-            int x = pos.getX();
-            int y = pos.getY();
-
-            if (x < minX) {
-                minX = x;
-            }
-            if (x > maxX) {
-                maxX = x;
-            }
-            if (y < minY) {
-                minY = y;
-            }
-            if (y > maxY) {
-                maxY = y;
-            }
-        }
-
-        Vector2d lowerLeft = new Vector2d(minX, minY);
-        Vector2d upperRight = new Vector2d(maxX, maxY);
-        return mapVis.draw(lowerLeft, upperRight);
-    }
-
-    @Override
     public List<WorldElement> getElements() {
         List<WorldElement> allElements = super.getElements();
         allElements.addAll(grasses.values());
@@ -97,4 +47,26 @@ public class GrassField extends AbstractWorldMap implements WorldMap {
         return grasses.containsKey(position);
     }
     //getter pozycji trawy - do testów integracyjnych
+
+    @Override
+    public Boundary getCurrentBounds() {
+
+        Collection<WorldElement> mapElements = this.getElements();
+
+        if(mapElements == null || mapElements.isEmpty()) {
+            return new Boundary(new Vector2d(0,0), new Vector2d(0,0));
+        }
+
+        Vector2d lowerLeftCorner = new Vector2d(Integer.MAX_VALUE, Integer.MAX_VALUE);
+        Vector2d upperRightCorner = new Vector2d(Integer.MIN_VALUE, Integer.MIN_VALUE);
+
+        for (WorldElement element : mapElements) {
+            Vector2d position = element.getPosition();
+
+            lowerLeftCorner = lowerLeftCorner.lowerLeft(position);
+            upperRightCorner = upperRightCorner.upperRight(position);
+        }
+
+        return new Boundary(lowerLeftCorner, upperRightCorner);
+    }
 }

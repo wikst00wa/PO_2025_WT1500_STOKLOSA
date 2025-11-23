@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class SimulationTest {
 
@@ -174,67 +174,29 @@ public class SimulationTest {
     }
 
     @Test
-    public void simulationAcceptsOnlyInvalidInputs() {
+    public void simulationRejectsOnlyInvalidInputs() throws IllegalArgumentException {
         //given
         String[] input = {"x", "d", "p", "h", "w"};
 
-        List<Vector2d> positions = List.of(
-                new Vector2d(2,2),
-                new Vector2d(1,3)
-        );
-
-        List<Vector2d> pos_validator = List.of(
-                new Vector2d(2, 2),
-                new Vector2d(1, 3)
-        );
-
-        List<MapDirection> ori_validator = List.of(
-                MapDirection.NORTH,
-                MapDirection.NORTH
-        );
-
-        List<MoveDirection> directions = OptionsParser.parseOptions(input);
-        RectangularMap map = new RectangularMap(5, 5);
-        Simulation simulation = new Simulation(positions, directions, map);
-
-        //when
-        simulation.run();
+        //when (nothing)
 
         //then
-        assertEquals(pos_validator, simulation.getAnimalsPositions());
-        assertEquals(ori_validator, simulation.getAnimalsOrientations());
+        assertThrows(IllegalArgumentException.class, () -> {
+            OptionsParser.parseOptions(input);
+        });
     }
 
     @Test
-    public void simulationAcceptsMixedInputs() {
+    public void simulationRejectsMixedInputs() throws IllegalArgumentException {
         //given
         String[] input = {"x", "f", "z", "l", "f", "g", "h", "b"};
 
-        List<Vector2d> positions = List.of(
-                new Vector2d(2,2),
-                new Vector2d(1,3)
-        );
-
-        List<Vector2d> pos_validator = List.of(
-                new Vector2d(2, 4),
-                new Vector2d(2, 3)
-        );
-
-        List<MapDirection> ori_validator = List.of(
-                MapDirection.NORTH,
-                MapDirection.WEST
-        );
-
-        List<MoveDirection> directions = OptionsParser.parseOptions(input);
-        RectangularMap map = new RectangularMap(5, 5);
-        Simulation simulation = new Simulation(positions, directions, map);
-
-        //when
-        simulation.run();
+        //when (nothing)
 
         //then
-        assertEquals(pos_validator, simulation.getAnimalsPositions());
-        assertEquals(ori_validator, simulation.getAnimalsOrientations());
+        assertThrows(IllegalArgumentException.class, () -> {
+            OptionsParser.parseOptions(input);
+        });
     }
 
     @Test

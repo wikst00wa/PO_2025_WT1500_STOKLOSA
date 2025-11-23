@@ -1,5 +1,6 @@
 package agh.ics.oop.model;
 
+import agh.ics.oop.model.util.IncorrectPositionException;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -7,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class RectangularMapTest {
 
     @Test
-    public void animalPlacingWorksWhenItShould() {
+    public void animalPlacingWorksWhenItShould() throws IncorrectPositionException {
         //given
         RectangularMap map = new RectangularMap(5, 5);
         Vector2d validator = new Vector2d(3, 4);
@@ -20,7 +21,7 @@ public class RectangularMapTest {
     }
 
     @Test
-    public void animalPlacingDoesNotWorkWhenPlacingPositionOutOfBounds() {
+    public void animalPlacingDoesNotWorkWhenPlacingPositionOutOfBounds() throws IncorrectPositionException {
         //given
         RectangularMap map = new RectangularMap(5, 5);
         Vector2d validator = new Vector2d(6, 2);
@@ -29,11 +30,13 @@ public class RectangularMapTest {
         //when (nothing)
 
         //then
-        assertFalse(map.place(animal));
+        assertThrows(IncorrectPositionException.class, () -> {
+            map.place(animal);
+        });
     }
 
     @Test
-    public void animalPlacingDoesNotWorkWhenAlreadyPlaced() {
+    public void animalPlacingDoesNotWorkWhenAlreadyPlaced() throws IncorrectPositionException {
         //given
         RectangularMap map = new RectangularMap(5, 5);
         Vector2d validator = new Vector2d(3, 4);
@@ -43,11 +46,13 @@ public class RectangularMapTest {
         map.place(animal);
 
         //then
-        assertFalse(map.place(animal));
+        assertThrows(IncorrectPositionException.class, () -> {
+            map.place(animal);
+        });
     }
 
     @Test
-    public void cannotPlaceAnotherAnimalOnAnAlreadyOccupiedSpace() {
+    public void cannotPlaceAnotherAnimalOnAnAlreadyOccupiedSpace() throws IncorrectPositionException {
         //given
         RectangularMap map = new RectangularMap(5, 5);
         Vector2d validator = new Vector2d(3, 4);
@@ -58,11 +63,13 @@ public class RectangularMapTest {
         map.place(animal1);
 
         //then
-        assertFalse(map.place(animal2));
+        assertThrows(IncorrectPositionException.class, () -> {
+            map.place(animal2);
+        });
     }
 
     @Test
-    public void posReachableWhenAllIsFine() {
+    public void posReachableWhenAllIsFine() throws IncorrectPositionException {
         //given
         RectangularMap map = new RectangularMap(5, 5);
         Vector2d pos = new Vector2d(3, 2);
@@ -77,7 +84,7 @@ public class RectangularMapTest {
     }
 
     @Test
-    public void posUnreachableWhenPosOutOfBounds() {
+    public void posUnreachableWhenPosOutOfBounds() throws IncorrectPositionException {
         //given
         RectangularMap map = new RectangularMap(5, 5);
         Vector2d pos = new Vector2d(3, 4);
@@ -92,7 +99,7 @@ public class RectangularMapTest {
     }
 
     @Test
-    public void posUnreachableWhenPosIsOccupied() {
+    public void posUnreachableWhenPosIsOccupied() throws IncorrectPositionException {
         //given
         RectangularMap map = new RectangularMap(5, 5);
         Vector2d pos = new Vector2d(2, 1);
@@ -106,7 +113,7 @@ public class RectangularMapTest {
     }
 
     @Test
-    public void animalMovesWhenItShould() {
+    public void animalMovesWhenItShould() throws IncorrectPositionException {
         //given
         RectangularMap map = new RectangularMap(3, 7);
         Vector2d pos = new Vector2d(1, 5);
@@ -124,7 +131,7 @@ public class RectangularMapTest {
     }
 
     @Test
-    public void animalDoesNotMoveWhenAboutToLeaveMap() {
+    public void animalDoesNotMoveWhenAboutToLeaveMap() throws IncorrectPositionException {
         //given
         RectangularMap map = new RectangularMap(3, 7);
         Vector2d pos = new Vector2d(1, 6);
@@ -141,7 +148,7 @@ public class RectangularMapTest {
     }
 
     @Test
-    public void animalDoesNotMoveWhenAnotherAnimalIsOnItsWay() {
+    public void animalDoesNotMoveWhenAnotherAnimalIsOnItsWay() throws IncorrectPositionException {
         //given
         RectangularMap map = new RectangularMap(4, 6);
         Vector2d pos1 = new Vector2d(0, 2);
