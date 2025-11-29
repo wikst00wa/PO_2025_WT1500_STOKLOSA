@@ -4,15 +4,13 @@ import agh.ics.oop.model.util.Boundary;
 import agh.ics.oop.model.util.IncorrectPositionException;
 import agh.ics.oop.model.util.MapVisualizer;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public abstract class AbstractWorldMap implements WorldMap {
     protected final Map<Vector2d, Animal> animals = new HashMap<>();
     private final MapVisualizer mapvis;
     private final List<MapChangeListener> listeners = new ArrayList<MapChangeListener>();
+    private final UUID uuid = UUID.randomUUID();
 
     public AbstractWorldMap() {
         this.mapvis = new MapVisualizer(this);
@@ -100,5 +98,9 @@ public abstract class AbstractWorldMap implements WorldMap {
         for (MapChangeListener listener : listeners) {
             listener.mapChanged(this, message);
         }
+    }
+
+    public UUID getId() {
+        return uuid;
     }
 }
