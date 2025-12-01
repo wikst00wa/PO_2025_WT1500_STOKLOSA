@@ -1,11 +1,12 @@
 package agh.ics.oop.model;
 
+import agh.ics.oop.model.util.IncorrectPositionException;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class GrassFieldTest {
     @Test
-    void animalPlacedOnEmptyFieldWorks() {
+    void animalPlacedOnEmptyFieldWorks() throws IncorrectPositionException {
         //given
         GrassField map = new GrassField(10);
         Animal animal = new Animal(new Vector2d(0,0));
@@ -20,7 +21,7 @@ public class GrassFieldTest {
     }
 
     @Test
-    void cannotPlaceAnimalOnOccupiedPosition() {
+    void cannotPlaceAnimalOnOccupiedPosition() throws IncorrectPositionException {
         //given
         GrassField map = new GrassField(10);
         Animal a1 = new Animal(new Vector2d(0,0));
@@ -30,11 +31,13 @@ public class GrassFieldTest {
 
         //then
         assertTrue(map.place(a1));
-        assertFalse(map.place(a2));
+        assertThrows(IncorrectPositionException.class, () -> {
+            map.place(a2);
+        });
     }
 
     @Test
-    void mapUpdatesAfterAnimalHasMoved() {
+    void mapUpdatesAfterAnimalHasMoved() throws IncorrectPositionException {
         //given
         GrassField map = new GrassField(10);
         Animal animal = new Animal(new Vector2d(2,2));
@@ -50,7 +53,7 @@ public class GrassFieldTest {
     }
 
     @Test
-    void testAnimalCannotMoveToPositionOccupiedByAnimal() {
+    void testAnimalCannotMoveToPositionOccupiedByAnimal() throws IncorrectPositionException {
         //given
         GrassField map = new GrassField(10);
         Animal a1 = new Animal(new Vector2d(2,2));
@@ -106,7 +109,7 @@ public class GrassFieldTest {
     }
 
     @Test
-    void AnimalCanMoveOntoGrass() {
+    void AnimalCanMoveOntoGrass() throws IncorrectPositionException {
         //given
         int n = 5;
         GrassField map = new GrassField(n);
