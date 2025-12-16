@@ -6,7 +6,7 @@ import agh.ics.oop.model.util.IncorrectPositionException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Simulation {
+public class Simulation implements Runnable {
     private final List<Animal> simulatedAnimals;
     private final List<MoveDirection> simulatedDirections;
     private final WorldMap simulatedMap;
@@ -36,7 +36,6 @@ public class Simulation {
         for (int i = 0; i < moves; i++) {
             int animal_id = i % population;
             this.simulatedMap.move(this.simulatedAnimals.get(animal_id), this.simulatedDirections.get(i));
-            //System.out.println(this.simulatedMap);
         }
     }
 

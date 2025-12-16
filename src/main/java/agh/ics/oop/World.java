@@ -5,6 +5,7 @@ import agh.ics.oop.model.MoveDirection;
 import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.util.ConsoleMapDisplay;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class World {
@@ -21,27 +22,35 @@ public class World {
         }
 
         List<Vector2d> positions = List.of(new Vector2d(2,2), new Vector2d(3,4), new Vector2d(3, 4));
-        ConsoleMapDisplay display = new ConsoleMapDisplay();
-        GrassField map = new GrassField(10);
-        map.addListener(display);
-        Simulation simulation = new Simulation(positions, directions, map);
-        simulation.run();
+
+//        ConsoleMapDisplay display1 = new ConsoleMapDisplay();
+//        GrassField map1 = new GrassField(10);
+//        map1.addListener(display1);
+//
+//        ConsoleMapDisplay display2 = new ConsoleMapDisplay();
+//        RectangularMap map2 = new RectangularMap(10, 10);
+//        map2.addListener(display2);
+//
+//        Simulation simulation1 = new Simulation(positions, directions, map1);
+//        Simulation simulation2 = new Simulation(positions, directions, map2);
+
+        ArrayList<Simulation> simulations = new ArrayList<Simulation>();
+        for (int i = 0; i < 1000; i++) {
+            GrassField map = new GrassField(10);
+            map.addListener(new ConsoleMapDisplay());
+
+            simulations.add(new Simulation(positions, directions, map));
+        }
+
+        SimulationEngine engine = new SimulationEngine(simulations);
+        //engine.runSync();
+        engine.runAsyncInThreadPool();
+        try {
+            engine.awaitSimulationsEnd();
+        }
+        catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         System.out.println("Stop");
     }
-
-    /* (Nieużywana, stara metoda run z kilku labów wstecz)
-    public static void run(List<MoveDirection> directions) {
-
-        for (MoveDirection direction : directions) {
-            String result = switch (direction) {
-                case FORWARD -> "Zwierzak idzie do przodu";
-                case BACKWARD -> "Zwierzak idzie do tylu";
-                case LEFT -> "Zwierzak skreca w lewo";
-                case RIGHT -> "Zwierzak skreca w prawo";
-            };
-            System.out.println(result);
-        }
-    }
-
-     */
 }
