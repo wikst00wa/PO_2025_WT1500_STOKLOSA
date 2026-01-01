@@ -3,6 +3,8 @@ package agh.ics.oop.presenter;
 import agh.ics.oop.OptionsParser;
 import agh.ics.oop.Simulation;
 import agh.ics.oop.model.*;
+import agh.ics.oop.model.util.Boundary;
+import agh.ics.oop.model.util.IncorrectPositionException;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.VPos;
@@ -15,6 +17,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class SimulationPresenter implements MapChangeListener {
@@ -39,51 +43,73 @@ public class SimulationPresenter implements MapChangeListener {
         this.map = map;
     }
 
-    public void drawMap(WorldMap map) {
-        GraphicsContext graphics = mapGrid.getGraphicsContext2D();
-        int oldWidth = map.getCurrentBounds().upperRightCorner().getX() - map.getCurrentBounds().lowerLeftCorner().getX();
-        int oldHeight = map.getCurrentBounds().upperRightCorner().getY() - map.getCurrentBounds().lowerLeftCorner().getY();
-        mapGrid.setWidth((oldWidth + 1) * CELL_SIZE + BORDER_WIDTH);
-        mapGrid.setHeight((oldHeight + 1) * CELL_SIZE + BORDER_WIDTH);
-        clearGrid();
-        graphics.setStroke(Color.BLACK);
-        graphics.setLineWidth(BORDER_WIDTH);
-        for (int x = 0; x < mapGrid.getWidth() + 1; x += CELL_SIZE) {
-            graphics.strokeLine(x + BORDER_OFFSET, 0, x + BORDER_OFFSET, mapGrid.getHeight());
-        }
+public void drawMap() {
+    GraphicsContext graphics = mapGrid.getGraphicsContext2D();
 
-        for (int y = 0; y < mapGrid.getHeight() + 1; y += CELL_SIZE) {
-            graphics.strokeLine(0, y + BORDER_OFFSET,  mapGrid.getWidth(), y + BORDER_OFFSET);
-        }
+    // Pobranie granic mapy
+    Boundary bounds = map.getCurrentBounds();
+    int cols = bounds.upperRightCorner().getX() - bounds.lowerLeftCorner().getX() + 1;
+    int rows = bounds.upperRightCorner().getY() - bounds.lowerLeftCorner().getY() + 1;
 
-        // Nagłówki osi
-        configureFont(graphics, 15, Color.BLACK);
-        graphics.fillText("Y/X", CELL_SIZE_OFFSET + BORDER_OFFSET, CELL_SIZE_OFFSET + BORDER_OFFSET);
+    int xOffset = 1;
+    int yOffset = 1;
 
-        int v = map.getCurrentBounds().upperRightCorner().getY();
-        for (int y = CELL_SIZE + BORDER_OFFSET + CELL_SIZE_OFFSET; y < mapGrid.getHeight() + 1; y += CELL_SIZE) {
-            graphics.fillText(String.valueOf(v), CELL_SIZE_OFFSET + BORDER_OFFSET, y);
-            v -= 1;
-        }
+    // Zmiana wymiarów Canvas
+    mapGrid.setWidth((cols + xOffset) * CELL_SIZE + BORDER_WIDTH);
+    mapGrid.setHeight((rows + yOffset) * CELL_SIZE + BORDER_WIDTH);
 
-        v = map.getCurrentBounds().lowerLeftCorner().getX();
-        for (int x = CELL_SIZE + BORDER_OFFSET + CELL_SIZE_OFFSET; x < mapGrid.getWidth() + 1; x += CELL_SIZE) {
-            graphics.fillText(String.valueOf(v), x, CELL_SIZE_OFFSET + BORDER_OFFSET);
-            v += 1;
-        }
+    clearGrid();
 
-        // Zawartość mapy
-        int x;
-        int y;
-        configureFont(graphics, 30, Color.RED);
-        for (WorldElement element : map.getElements()) {
-            if (map.objectAt(element.getPosition()).equals(element)) {
-                x = element.getPosition().getX() - map.getCurrentBounds().lowerLeftCorner().getX() + 1;
-                y = map.getCurrentBounds().upperRightCorner().getY() - element.getPosition().getY() + 1;
-                graphics.fillText(element.toString(), x * CELL_SIZE + CELL_SIZE_OFFSET + BORDER_OFFSET, y * CELL_SIZE + CELL_SIZE_OFFSET + BORDER_OFFSET);
-            }
-        }
+    graphics.setStroke(Color.BLACK);
+    graphics.setLineWidth(BORDER_WIDTH);
+
+    graphics.strokeLine(BORDER_OFFSET, 0, BORDER_OFFSET, mapGrid.getHeight()); // lewa
+    graphics.strokeLine(0, BORDER_OFFSET, mapGrid.getWidth(), BORDER_OFFSET);
+
+    // Rysowanie siatki
+    for (int i = 0; i <= cols; i++) {
+        double x = (i + xOffset) * CELL_SIZE + BORDER_OFFSET;
+        graphics.strokeLine(x, 0, x, mapGrid.getHeight());
     }
+    for (int i = 0; i <= rows; i++) {
+        double y = (i + yOffset) * CELL_SIZE + BORDER_OFFSET;
+        graphics.strokeLine(0, y, mapGrid.getWidth(), y);
+    }
+
+    // Nagłówki osi
+    configureFont(graphics, 15, Color.BLACK);
+    graphics.fillText("Y/X", CELL_SIZE_OFFSET + BORDER_OFFSET, CELL_SIZE_OFFSET + BORDER_OFFSET);
+
+    int v = bounds.upperRightCorner().getY();
+    for (int y = 0; y < rows; y++) {
+        double pixelY = (y + yOffset) * CELL_SIZE + CELL_SIZE_OFFSET + BORDER_OFFSET;
+        graphics.fillText(String.valueOf(v - y), CELL_SIZE_OFFSET + BORDER_OFFSET, pixelY);
+    }
+
+    v = bounds.lowerLeftCorner().getX();
+    for (int x = 0; x < cols; x++) {
+        double pixelX = (x + xOffset) * CELL_SIZE + CELL_SIZE_OFFSET + BORDER_OFFSET;
+        graphics.fillText(String.valueOf(v + x), pixelX, CELL_SIZE_OFFSET + BORDER_OFFSET);
+    }
+
+    // Rysowanie elementów mapy
+    configureFont(graphics, 30, Color.RED);
+
+    for (WorldElement element : map.getElements()) {
+        map.objectAt(element.getPosition())
+                .filter(obj -> obj.equals(element))   // jeśli to samo obiektowo
+                .ifPresent(obj -> {
+                    int ex = element.getPosition().getX() - bounds.lowerLeftCorner().getX() + xOffset;
+                    int ey = bounds.upperRightCorner().getY() - element.getPosition().getY() + yOffset;
+                    graphics.fillText(
+                            obj.toString(),
+                            ex * CELL_SIZE + CELL_SIZE_OFFSET + BORDER_OFFSET,
+                            ey * CELL_SIZE + CELL_SIZE_OFFSET + BORDER_OFFSET
+                    );
+                });
+    }
+}
+
 
     private void clearGrid() {
         GraphicsContext graphics = mapGrid.getGraphicsContext2D();
@@ -93,7 +119,7 @@ public class SimulationPresenter implements MapChangeListener {
 
     public void mapChanged(WorldMap worldMap, String message) {
         Platform.runLater(() -> {
-            drawMap(worldMap);
+            drawMap();
             moveInfoLabel.setText(message);
         });
     }
@@ -114,8 +140,33 @@ public class SimulationPresenter implements MapChangeListener {
         map.addListener(this);
         setWorldMap(map);
 
+        map.addListener((changedMap, message) -> {
+            String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+
+            System.out.println(timestamp + " " + message);
+        });
+
         Simulation simulation = new Simulation(positions, directions, map);
 
-        new Thread(simulation).start();
+        new Thread(() -> {
+            for (Animal animal : simulation.getAnimals()) {
+
+                Platform.runLater(() -> {
+                    try {
+                        map.place(animal);
+                    } catch (IncorrectPositionException e) {
+                        e.printStackTrace();
+                    }
+                });
+
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            new Thread(simulation).start();
+
+        }).start();
     }
 }

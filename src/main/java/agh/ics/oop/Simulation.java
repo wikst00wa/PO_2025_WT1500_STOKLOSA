@@ -14,19 +14,12 @@ public class Simulation implements Runnable {
     public Simulation(List<Vector2d> positions, List<MoveDirection> directions, WorldMap map) {
         this.simulatedAnimals = new ArrayList<Animal>();
         this.simulatedMap = map;
+        this.simulatedDirections = new ArrayList<MoveDirection>(directions);
 
         for (Vector2d pos : positions) {
-            Animal newAnimal = new Animal(pos);
-            try {
-                this.simulatedMap.place(newAnimal);
-                this.simulatedAnimals.add(newAnimal);
-            }
-
-            catch (IncorrectPositionException e) {
-                System.out.println(e.getMessage());
-            }
+            simulatedAnimals.add(new Animal(pos));
         }
-        this.simulatedDirections = new ArrayList<MoveDirection>(directions);
+
     }
 
     public void run() {
@@ -48,7 +41,7 @@ public class Simulation implements Runnable {
     public List<Vector2d> getAnimalsPositions() {
         List<Vector2d> new_positions = new ArrayList<Vector2d>();
 
-        for (Animal animal : simulatedAnimals) {
+        for (Animal animal : this.simulatedAnimals) {
             new_positions.add(animal.getPosition());
         }
 
@@ -58,10 +51,14 @@ public class Simulation implements Runnable {
     public List<MapDirection> getAnimalsOrientations() {
         List<MapDirection> new_orientations = new ArrayList<MapDirection>();
 
-        for (Animal animal : simulatedAnimals) {
+        for (Animal animal : this.simulatedAnimals) {
             new_orientations.add(animal.getOrientation());
         }
 
         return new_orientations;
+    }
+
+    public List<Animal> getAnimals() {
+        return this.simulatedAnimals;
     }
 }

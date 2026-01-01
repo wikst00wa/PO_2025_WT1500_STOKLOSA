@@ -16,7 +16,7 @@ public class GrassFieldTest {
 
         //then
         assertTrue(placed);
-        assertEquals(animal, map.objectAt(new Vector2d(0,0)));
+        assertEquals(animal, map.objectAt(new Vector2d(0,0)).orElseThrow());
         assertTrue(map.isOccupied(new Vector2d(0,0)));
     }
 
@@ -48,7 +48,7 @@ public class GrassFieldTest {
 
         //then
         Vector2d newPos = animal.getPosition();
-        assertEquals(animal, map.objectAt(newPos));
+        assertEquals(animal, map.objectAt(newPos).orElseThrow());
         assertFalse(map.isOccupied(new Vector2d(2,2)));
     }
 
@@ -136,7 +136,7 @@ public class GrassFieldTest {
 
         //then
         assertTrue(placed);
-        assertTrue(map.objectAt(grassPos) instanceof Animal);
+        assertTrue(map.objectAt(grassPos).map(o -> o instanceof Animal).orElse(false));
         assertTrue(map.isOccupiedStrictlyByGrass(grassPos));
     }
 
