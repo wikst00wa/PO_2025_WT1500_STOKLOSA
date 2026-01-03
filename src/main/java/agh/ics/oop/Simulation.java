@@ -30,7 +30,7 @@ public class Simulation implements Runnable {
             int animal_id = i % population;
             this.simulatedMap.move(this.simulatedAnimals.get(animal_id), this.simulatedDirections.get(i));
             try {
-                Thread.sleep(2000);
+                Thread.sleep(500);
             }
             catch (InterruptedException e) {
                 e.printStackTrace();

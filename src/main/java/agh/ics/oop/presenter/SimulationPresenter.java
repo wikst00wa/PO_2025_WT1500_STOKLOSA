@@ -63,7 +63,7 @@ public void drawMap() {
     graphics.setStroke(Color.BLACK);
     graphics.setLineWidth(BORDER_WIDTH);
 
-    graphics.strokeLine(BORDER_OFFSET, 0, BORDER_OFFSET, mapGrid.getHeight()); // lewa
+    graphics.strokeLine(BORDER_OFFSET, 0, BORDER_OFFSET, mapGrid.getHeight());
     graphics.strokeLine(0, BORDER_OFFSET, mapGrid.getWidth(), BORDER_OFFSET);
 
     // Rysowanie siatki
@@ -97,15 +97,23 @@ public void drawMap() {
 
     for (WorldElement element : map.getElements()) {
         map.objectAt(element.getPosition())
-                .filter(obj -> obj.equals(element))   // jeśli to samo obiektowo
+                .filter(obj -> obj.equals(element))
                 .ifPresent(obj -> {
+
                     int ex = element.getPosition().getX() - bounds.lowerLeftCorner().getX() + xOffset;
                     int ey = bounds.upperRightCorner().getY() - element.getPosition().getY() + yOffset;
-                    graphics.fillText(
-                            obj.toString(),
-                            ex * CELL_SIZE + CELL_SIZE_OFFSET + BORDER_OFFSET,
-                            ey * CELL_SIZE + CELL_SIZE_OFFSET + BORDER_OFFSET
-                    );
+
+//                    graphics.fillText(
+//                            obj.toString(),
+//                            ex * CELL_SIZE + CELL_SIZE_OFFSET + BORDER_OFFSET,
+//                            ey * CELL_SIZE + CELL_SIZE_OFFSET + BORDER_OFFSET
+//                    );
+
+                    double centerX = ex * CELL_SIZE + CELL_SIZE_OFFSET + BORDER_OFFSET;
+                    double centerY = ey * CELL_SIZE + CELL_SIZE_OFFSET + BORDER_OFFSET;
+
+                    WorldElementBox box = new WorldElementBox(obj);
+                    box.draw(graphics, centerX, centerY);
                 });
     }
 }
@@ -124,7 +132,7 @@ public void drawMap() {
         });
     }
 
-    private void configureFont(GraphicsContext graphics, int size, Color black) {
+    public static void configureFont(GraphicsContext graphics, int size, Color black) {
         graphics.setTextAlign(TextAlignment.CENTER);
         graphics.setTextBaseline(VPos.CENTER);
         graphics.setFont(new Font("Arial", size));
@@ -160,7 +168,7 @@ public void drawMap() {
                 });
 
                 try {
-                    Thread.sleep(2000);
+                    Thread.sleep(500);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
