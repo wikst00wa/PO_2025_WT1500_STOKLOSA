@@ -23,19 +23,8 @@ public class World {
 
         List<Vector2d> positions = List.of(new Vector2d(2,2), new Vector2d(3,4), new Vector2d(3, 4));
 
-//        ConsoleMapDisplay display1 = new ConsoleMapDisplay();
-//        GrassField map1 = new GrassField(10);
-//        map1.addListener(display1);
-//
-//        ConsoleMapDisplay display2 = new ConsoleMapDisplay();
-//        RectangularMap map2 = new RectangularMap(10, 10);
-//        map2.addListener(display2);
-//
-//        Simulation simulation1 = new Simulation(positions, directions, map1);
-//        Simulation simulation2 = new Simulation(positions, directions, map2);
-
         ArrayList<Simulation> simulations = new ArrayList<Simulation>();
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < 2; i++) {
             GrassField map = new GrassField(10);
             map.addListener(new ConsoleMapDisplay());
 
@@ -43,7 +32,7 @@ public class World {
         }
 
         SimulationEngine engine = new SimulationEngine(simulations);
-        //engine.runSync();
+
         engine.runAsyncInThreadPool();
         try {
             engine.awaitSimulationsEnd();
