@@ -105,15 +105,6 @@ public abstract class AbstractWorldMap implements WorldMap {
     }
 
     public Collection<Animal> getOrderedAnimals() {
-//        List<Animal> orderedAnimals = new ArrayList<Animal>(this.animals.values());
-//
-//        Collections.sort(
-//                orderedAnimals,
-//                Comparator.comparing((Animal a) -> a.getPosition().getX()).thenComparing(a -> a.getPosition().getY())
-//        );
-//
-//        return orderedAnimals;
-
         return this.animals.values().stream()
                 .sorted(Comparator.comparing((Animal a) -> a.getPosition().getX()).thenComparing(a -> a.getPosition().getY()))
                 .toList();
