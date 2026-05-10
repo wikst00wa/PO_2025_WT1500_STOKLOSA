@@ -39,42 +39,6 @@ public class Animal implements WorldElement {
         return this.orientation;
     }
 
-//    (Stara metoda move przyjmująca tylko MoveDirection)
-//    public void move(MoveDirection direction) {
-//        switch (direction) {
-//            case LEFT: {
-//                this.orientation = this.orientation.previous();
-//                break;
-//            }
-//
-//            case RIGHT: {
-//                this.orientation = this.orientation.next();
-//                break;
-//            }
-//
-//            case FORWARD: {
-//                int aux_x = (this.position.add(this.orientation.toUnitVector())).getX();
-//                int aux_y = (this.position.add(this.orientation.toUnitVector())).getY();
-//
-//                if ((-1 < aux_x) && (aux_x < 5) && (-1 < aux_y) && (aux_y < 5)) {
-//                    this.position = this.position.add(this.orientation.toUnitVector());
-//                }
-//                break;
-//            }
-//
-//            case BACKWARD: {
-//                int aux_x = (this.position.add(this.orientation.toUnitVector().opposite())).getX();
-//                int aux_y = (this.position.add(this.orientation.toUnitVector().opposite())).getY();
-//
-//                if ((-1 < aux_x) && (aux_x < 5) && (-1 < aux_y) && (aux_y < 5)) {
-//                    this.position = this.position.subtract(this.orientation.toUnitVector());
-//                }
-//                break;
-//            }
-//
-//        }
-//    }
-
     public void move(MoveDirection direction, MoveValidator validator) {
         switch (direction) {
             case LEFT: {
@@ -105,5 +69,15 @@ public class Animal implements WorldElement {
                 break;
             }
         }
+    }
+
+    @Override
+    public String getImageName() {
+        return switch (this.orientation) {
+            case NORTH -> "up.png";
+            case EAST -> "right.png";
+            case SOUTH -> "down.png";
+            case WEST -> "left.png";
+        };
     }
 }

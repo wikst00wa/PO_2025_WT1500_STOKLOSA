@@ -3,6 +3,7 @@ package agh.ics.oop.model;
 import agh.ics.oop.model.util.Boundary;
 
 import java.util.*;
+import java.util.stream.Stream;
 
 public class GrassField extends AbstractWorldMap implements WorldMap {
     private final Map<Vector2d, Grass> grasses = new HashMap<>();
@@ -26,21 +27,26 @@ public class GrassField extends AbstractWorldMap implements WorldMap {
     }
 
     @Override
-    public WorldElement objectAt(Vector2d position) {
+    public Optional<WorldElement> objectAt(Vector2d position) {
         if (animals.containsKey(position)) {
             return super.objectAt(position);
         }
         else {
-            return grasses.get(position);
+            return Optional.ofNullable(grasses.get(position));
         }
     }
 
     @Override
     public List<WorldElement> getElements() {
-        List<WorldElement> allElements = super.getElements();
-        allElements.addAll(grasses.values());
+//        List<WorldElement> allElements = super.getElements();
+//        allElements.addAll(grasses.values());
+//
+//        return allElements;
 
-        return allElements;
+        return Stream.concat(
+                super.getElements().stream(),
+                grasses.values().stream()
+        ).toList();
     }
 
     public boolean isOccupiedStrictlyByGrass(Vector2d position) {

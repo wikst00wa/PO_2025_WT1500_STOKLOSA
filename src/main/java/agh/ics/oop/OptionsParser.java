@@ -5,6 +5,7 @@ import agh.ics.oop.model.MoveDirection;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class OptionsParser {
     /* Stara metoda zwracająca tablicę MoveDirection[]
@@ -39,19 +40,30 @@ public class OptionsParser {
 */
 
     public static List<MoveDirection> parseOptions(String[] args) throws IllegalArgumentException {
-        List<MoveDirection> res = new ArrayList<MoveDirection>();
+//        List<MoveDirection> res = new ArrayList<MoveDirection>();
+//
+//        for (String arg : args) {
+//                switch (arg) {
+//                    case "f" -> res.add(MoveDirection.FORWARD);
+//                    case "b" -> res.add(MoveDirection.BACKWARD);
+//                    case "l" -> res.add(MoveDirection.LEFT);
+//                    case "r" -> res.add(MoveDirection.RIGHT);
+//                    default -> throw new IllegalArgumentException(arg + " is not a correct direction specification");
+//                }
+//        }
+//
+//        return res;
 
-        for (String arg : args) {
-                switch (arg) {
-                    case "f" -> res.add(MoveDirection.FORWARD);
-                    case "b" -> res.add(MoveDirection.BACKWARD);
-                    case "l" -> res.add(MoveDirection.LEFT);
-                    case "r" -> res.add(MoveDirection.RIGHT);
-                    default -> throw new IllegalArgumentException(arg + " is not a correct direction specification");
-                }
-        }
+        return Stream.of(args)
+                .map(arg -> switch(arg) {
+                    case "f" -> MoveDirection.FORWARD;
+                    case "b" -> MoveDirection.BACKWARD;
+                    case "l" -> MoveDirection.LEFT;
+                    case "r" -> MoveDirection.RIGHT;
+                    default -> throw new IllegalArgumentException (arg + " is not a correct direction specification");
+                })
+                .toList();
 
-        return res;
     }
 }
 
